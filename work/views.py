@@ -36,7 +36,7 @@ class Registration(View):
 
         form=Register(request.POST)
         if form.is_valid():
-            # form.save()
+            #form.save()
             User.objects.create_user(**form.cleaned_data)
             form=Register()
             return render(request,"Register.html",{'form':form})
@@ -56,7 +56,7 @@ class Signin(View):
             if user_obj:
                 print("valid")
                 login(request,user_obj)
-                return redirect("task")
+                return redirect("index")
             else:
                 print("invalid")
                 return render(request,"Login.html")
@@ -127,6 +127,13 @@ class update_user(View):
         data=User.objects.get(id=id)
         form=Register(instance=data)
 
-        return render(request,"Register.html",{'form':form})
+        return render(request,"register.html",{'form':form})
     
+    def post(self,request,**kwargs):
+        id=kwargs.get("pk")
+        data=User.objects.get(id=id)
+        form=Register(request.POST,instance=data)
+        if form.is_valid():
+            form.save()
+        return redirect("index")
     
